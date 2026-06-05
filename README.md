@@ -1,4 +1,18 @@
-## Longitudinal tracking of multiple sclerosis lesions in the spinal cord: A validation study
+# Longitudinal tracking of multiple sclerosis lesions in the spinal cord: A validation study
+
+TODO: if accepted add icon here
+
+<img src="./data/complex_correspondance.png" width="800"/>
+
+Official repository of the longitudinal lesion tracking of MS SC lesions.
+
+This repo contains the code for evaluating 5 strategies to track SC MS lesions across timepoints. More details can be find in the paper.
+
+```
+TODO: if accepted add the citation here
+```
+
+## Reproducing the study 
 
 Here are the steps to reproduce the study:
 
