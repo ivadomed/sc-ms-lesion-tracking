@@ -2,7 +2,7 @@
 
 TODO: if accepted add icon here
 
-<img src="https://github.com/user-attachments/assets/cdb12ab9-aa16-42b9-b0f2-8fcfbf2e8062" width="700"/>
+<img src="https://github.com/user-attachments/assets/cdb12ab9-aa16-42b9-b0f2-8fcfbf2e8062" width="900"/>
 
 Official repository of the longitudinal lesion tracking of MS SC lesions.
 
