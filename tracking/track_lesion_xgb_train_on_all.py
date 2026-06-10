@@ -200,7 +200,7 @@ def main():
         json.dump(results, f, indent=4)
 
     # save the model
-    output_model_path = os.path.join(output_folder, 'lesion_mapping_XGB_model.pkl')
+    output_model_path = os.path.join(output_folder, 'lesion_mapping_XGB_model_train_on_all.pkl')
     with open(output_model_path, 'wb') as f:
         pickle.dump(model, f)
 
