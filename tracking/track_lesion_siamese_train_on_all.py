@@ -279,10 +279,10 @@ def train(X_train_1, X_train_2, y_train, output_folder, logger):
 
 if __name__ == "__main__":
     # Load the traing and testing data
-    X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_test_2, y_test, output_folder, logger, means, stds = load_data()
+    X_train_1, X_train_2, y_train, output_folder, logger, means, stds = load_data()
     # Train the model and evaluate it
-    model = train(X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_test_2, y_test, output_folder, logger)
+    model = train(X_train_1, X_train_2, y_train, output_folder, logger)
     # Save the model
-    model_path = os.path.join(output_folder, 'lesion_mapping_siamese_model.keras')
+    model_path = os.path.join(output_folder, 'lesion_mapping_siamese_model_train_on_all.keras')
     model.save(model_path)
     logger.info(f"Model saved at {model_path}")
