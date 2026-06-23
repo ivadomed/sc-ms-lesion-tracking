@@ -14,7 +14,9 @@ TODO: if accepted add the citation here
 
 ## Reproducing the study 
 
-Here are the steps to reproduce the study:
+
+<details>
+<summary><b>Here are the steps to reproduce the study:</b></summary>
 
 ### Data preparation
 
@@ -65,3 +67,6 @@ python track_lesion_siamese.py --dataset_csv /path/to/csv/dataset --output_folde
 ### Lesion tracking evaluation
 
 8. To evaluate each tracking methods we run [run_evaluation.py](./eval_tracking/run_evaluation.py)
+
+
+</details>
