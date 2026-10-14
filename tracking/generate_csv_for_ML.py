@@ -4,7 +4,7 @@ This code builds a dataset for training a model to predict lesion mapping betwee
 Input:
     -i: msd dataset path
     -pred: path to the folder containing the predicted segmentations (SC, lesions, centerline, levels ...)
-    -gt_mappings: path to the folder containing the ground truth lesion mappings
+    -gt-mapping: path to the folder containing the ground truth lesion mappings
     -o: output folder where to store the lesion matching results
     --for-gt-lesion-seg: if specified, the labeled lesion seg come from the gt_mapping folder instead of the pred_folder
 

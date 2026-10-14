@@ -3,8 +3,8 @@ In this script, we perform lesion mapping between two timepoints using an XGBoos
 This script is used to train the model on the entire dataset. The model will be released alongside the paper.
 
 Inputs:
-    - dataset_csv: Path to the csv dataset containing lesion features over time.
-    - output_folder: Path to the folder where model and results will be saved.
+    -d / --data: Path to the csv dataset containing lesion features over time.
+    -o / --output-folder: Path to the folder where model and results will be saved.
 
 Output:
     None

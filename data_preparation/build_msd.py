@@ -9,7 +9,7 @@ Arguments:
     --canproco-only: If set, only use CanProCo dataset
 
 Example:
-    python 1_create_msd_data.py -pd /path/to/dataset -po /path/to/output --canproco-exclude /path/to/canproco_exclude.yaml --exclude /path/to/exclude.yaml
+    python build_msd.py -pd /path/to/dataset -po /path/to/output --canproco-exclude /path/to/canproco_exclude.yaml --exclude /path/to/exclude.yaml
 
 Author: Pierre-Louis Benveniste
 """
@@ -28,7 +28,7 @@ import pandas as pd
 
 def get_parser():
     """
-    Get parser for script create_msd_data.py
+    Get parser for script build_msd.py
 
     Input:
         None
