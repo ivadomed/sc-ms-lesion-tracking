@@ -12,8 +12,41 @@ This repo contains the code for evaluating 5 strategies to track SC MS lesions a
 TODO: if accepted add the citation here
 ```
 
-## Reproducing the study 
+## Installation
 
+1. Install [SCT v7.4](https://spinalcordtoolbox.com/user_section/installation.html)
+
+2. Clone the repository and install the Python dependencies (Python 3.10):
+
+```console
+git clone https://github.com/ivadomed/sc-ms-lesion-tracking.git
+cd sc-ms-lesion-tracking
+conda create -n venv_tracking python=3.10 -y
+conda activate venv_tracking
+pip install -r requirements.txt
+```
+
+## Repository structure
+
+<details>
+<summary><b>Repository structure</b></summary>
+
+| Folder | Content |
+|---|---|
+| [data_preparation](./data_preparation/) | Build the MSD datalist, label the GT lesion segmentations and create the lesion mapping files, anonymize the derivatives |
+| [lesion_segmentation](./lesion_segmentation/) | Run the automatic lesion segmentation on CanProCo |
+| [tracking](./tracking/) | Lesion tracking methods (unregistered, registered + CoM, registered + IoU, XGBoost, Siamese), SCT segmentation/registration and building of the csv file for ML methods |
+| [cross_validation](./cross_validation/) | Leave-one-subject-out cross-validation of the unregistered, XGBoost and Siamese methods |
+| [hyperparameter_sweeps](./hyperparameter_sweeps/) | Sweeps of `w_z_over_disk` (unregistered) and of the IoU threshold (registered + IoU) |
+| [evaluation](./evaluation/) | Evaluation of the tracking methods and statistical comparison |
+| [registration_benchmark](./registration_benchmark/) | Comparison of SCT registration methods |
+| [visualization](./visualization/) | Maximum intensity projections of the label images |
+| [utils.py](./utils.py) | Shared functions (SC and lesion segmentation, centerline, vertebral levels, lesion labeling ...) |
+
+</details>
+
+
+## Reproducing the study 
 
 <details>
 <summary><b>Here are the steps to reproduce the study:</b></summary>
