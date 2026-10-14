@@ -1,9 +1,9 @@
 """
-In this script, we perform lesion mapping between two timepoints using an XGBoost model to predict lesion correspondences based on features extracted from the lesions.
+In this script, we perform lesion mapping between two timepoints using a Siamese network to predict lesion correspondences based on features extracted from the lesions.
 
 Inputs:
-    - dataset_csv: Path to the csv dataset containing lesion features over time.
-    - output_folder: Path to the folder where model and results will be saved.
+    -d / --data: Path to the csv dataset containing lesion features over time.
+    -o / --output-folder: Path to the folder where model and results will be saved.
 
 Output:
     - lesion_mapping_siamese_model.keras: the trained model

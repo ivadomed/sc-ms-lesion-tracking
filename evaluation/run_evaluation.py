@@ -2,13 +2,13 @@
 This file runs the lesion mapping evaluation script and plots the results.
 
 Input:
-    - input_msd_dataset: Path to the MSD dataset folder.
-    - pred_seg: Path to the folder containing predicted segmentations.
-    - pred_mapping: Path to the folder containing lesion mapping results.
-    - gt_mapping: Path to the folder containing ground truth lesion mapping results.
-    - output_folder: Path to the folder where evaluation results will be saved.
-    - sub-edss: Path to a csv file containing subject EDSS scores.
-    - set: Dataset split to evaluate ('train', 'val', 'test' or None for all subjects)
+    - -i / --input-msd: Path to the MSD dataset folder.
+    - -p / --pred-seg: Path to the folder containing predicted segmentations.
+    - -m / --pred-mapping: Path to the folder containing lesion mapping results.
+    - -g / --gt-mapping: Path to the folder containing ground truth lesion mapping results.
+    - -o / --output-folder: Path to the folder where evaluation results will be saved.
+    - -s / --sub-edss: Path to a csv file containing subject EDSS scores.
+    - --set: Dataset split to evaluate ('train', 'val', 'test' or None for all subjects)
 Output:
     None
 

@@ -9,6 +9,8 @@ Input:
 
 Output:
     None
+
+Author: Pierre-Louis Benveniste
 """
 import os
 import argparse

@@ -1,5 +1,5 @@
 """
-This file runs one of the 3 methods for lesion matching between two timepoints.
+This file runs one of the 5 methods for lesion matching between two timepoints.
 It runs on all images of the msd dataset provided as input.
 
 Input:
@@ -9,8 +9,10 @@ Input:
     -m: method to use for lesion matching. Choices are:
         - registered_with_CoM
         - registered_with_IoU
+        - registered_with_CoM_m0_to_m12
+        - registered_with_IoU_m0_to_m12
         - unregistered
-    -w_z_over_disk: weight for the z-axis distance relative to the disk plane when computing lesion matching (default: 25.0)
+    --w_z_over_disk: weight for the z-axis distance relative to the disk plane when computing lesion matching (default: 25.0)
 
 Output:
     None

@@ -1,6 +1,6 @@
 """
 This script performs statistical tests to compare the performance of strat5 and other strategies.
-Strat 3 was not included in the computation of the score for faster coding due to short deadline for rebuttal.
+Strat 3 is not included in this comparison.
 
 Input:
     -i1 : path to the results JSON file for strat1

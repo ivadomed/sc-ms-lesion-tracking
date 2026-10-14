@@ -33,10 +33,9 @@ from pathlib import Path
 from tqdm import tqdm
 from loguru import logger
 
-# Make sibling and eval_tracking modules importable
+# Make evaluation modules importable
 file_path = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, file_path)
-sys.path.insert(0, os.path.abspath(os.path.join(file_path, "..", "eval_tracking")))
+sys.path.insert(0, os.path.abspath(os.path.join(file_path, "..", "evaluation")))
 
 from run_evaluation import evaluate_lesion_mapping
 

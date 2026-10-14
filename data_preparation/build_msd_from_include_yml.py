@@ -1,5 +1,5 @@
 """
-This file creates the MSD-style JSON datalist to train an nnunet model using monai. 
+This file creates the MSD-style JSON datalist of the subjects listed in the include.yml file.
 
 Arguments:
     --include-yml: path to the yaml file containing the list of subjects to include
@@ -25,7 +25,7 @@ import pandas as pd
 
 def get_parser():
     """
-    Get parser for script create_msd_data.py
+    Get parser for script build_msd_from_include_yml.py
 
     Input:
         None

@@ -5,7 +5,7 @@ The lesion matching is based on Hungarian algorithm applied to the center of mas
 Input:
     -i1 : path to the input image at timepoint 1
     -i2 : path to the input image at timepoint 2
-    -pred: path tp the folder containing predicted files (SC, lesion ...)
+    -pred: path to the folder containing predicted files (SC, lesion ...)
     -o : path to the output folder where comparison results will be stored
 
 Output:

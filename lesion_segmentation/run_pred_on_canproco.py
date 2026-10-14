@@ -1,6 +1,6 @@
 """
-This file runs predicted lesion segmentation on all PSIR and STIR images in the canproco set when the sub has 2 timepoint.
-It makes sure to segment in order the tiempoint M0 then the timepoint M12.
+This file runs predicted lesion segmentation on all PSIR and STIR images in the canproco set when the sub has 2 timepoints.
+It makes sure to segment in order the timepoint M0 then the timepoint M12.
 
 Input:
     --d: path to the canproco dataset

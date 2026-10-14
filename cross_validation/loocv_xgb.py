@@ -3,8 +3,8 @@ In this script, we perform lesion mapping between two timepoints using an XGBoos
 The specificity of this script is that it uses LOOCV to estimate the performance of the model on the entire dataset.
 
 Inputs:
-    - dataset_csv: Path to the csv dataset containing lesion features over time.
-    - output_folder: Path to the folder where model and results will be saved.
+    -d / --data: Path to the csv dataset containing lesion features over time.
+    -o / --output-folder: Path to the folder where model and results will be saved.
 
 Output:
     None
