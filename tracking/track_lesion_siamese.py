@@ -6,7 +6,8 @@ Inputs:
     - output_folder: Path to the folder where model and results will be saved.
 
 Output:
-    None
+    - lesion_mapping_siamese_model.keras: the trained model
+    - lesion_mapping_siamese_predictions.csv: the prediction for every lesion pair of every subject (train and test)
 
 Author: Pierre-Louis Benveniste
 """
@@ -84,6 +85,8 @@ def load_data():
     lesions_1 = []
     lesions_2 = []
     lesion_pairs_labels = []
+    # Pair metadata (lesion ids, groups, raw features) kept for saving per-pair predictions
+    pairs_info = []
     subjects = df['subject'].unique()
 
     for subject in subjects:
@@ -107,9 +110,9 @@ def load_data():
                 lesion_pair = {
                     'subject': subject,
                 }
-                # Add features from lesion1 and lesion2
+                # Add features from lesion1 and lesion2 (lesion_id is an identifier, not a feature)
                 for col in df.columns:
-                    if col not in ['subject', 'timepoint', 'group']:
+                    if col not in ['subject', 'timepoint', 'group', 'lesion_id']:
                         lesion1_features[f'{col}'] = lesion1[col]
                         lesion2_features[f'{col}'] = lesion2[col]
                 
@@ -119,10 +122,25 @@ def load_data():
                 lesions_1.append(lesion1_features)
                 lesions_2.append(lesion2_features)
 
+                # Store pair metadata (raw, non-normalized features)
+                pair_info = {
+                    'subject': subject,
+                    'timepoint_1': tp1,
+                    'timepoint_2': tp2,
+                    'group_1': lesion1['group'],
+                    'group_2': lesion2['group'],
+                }
+                for col in df.columns:
+                    if col not in ['subject', 'timepoint', 'group']:
+                        pair_info[f'{col}_1'] = lesion1[col]
+                        pair_info[f'{col}_2'] = lesion2[col]
+                pairs_info.append(pair_info)
+
     # Create a DataFrame from lesion pairs
     df_pairs = pd.DataFrame(lesion_pairs_labels)
     lesion_1_df = pd.DataFrame(lesions_1)
     lesion_2_df = pd.DataFrame(lesions_2)
+    df_pairs_info = pd.DataFrame(pairs_info)
 
     # Split the dataset into training and testing sets (done on subject level to avoid data leakage)
     subjects = df_pairs['subject'].unique()
@@ -133,6 +151,9 @@ def load_data():
 
     # I manually set to false index 684 in lesion_pairs (because of this: https://github.com/ivadomed/ms-lesion-agnostic/issues/98)
     df_pairs.at[684, 'label'] = 0
+    # Keep the labels used for training/evaluation (after the manual fix above) in the pair metadata
+    df_pairs_info['label'] = df_pairs['label']
+    df_pairs_info['split'] = np.where(df_pairs_info['subject'].isin(test_subjects), 'test', 'train')
 
     train_lesion_1_df = lesion_1_df[lesion_1_df['subject'].isin(train_subjects)]
     train_lesion_2_df = lesion_2_df[lesion_2_df['subject'].isin(train_subjects)]
@@ -150,6 +171,7 @@ def load_data():
 
     # Split the dataset into features and labels
     feature_cols = [col for col in train_lesion_1_df.columns if col not in ['subject', 'label']]
+    logger.info(f"Features used for training: {feature_cols}")
     X_train_1 = train_lesion_1_df[feature_cols]
     X_train_2 = train_lesion_2_df[feature_cols]
     y_train = train_df_pairs['label']
@@ -185,7 +207,11 @@ def load_data():
 
     logger.info("Data normalized using StandardScaler.")
 
-    return X_train_1, X_train_2, y_train, _, _, _, X_test_1, X_test_2, y_test, output_folder, logger, means, stds
+    # Pair metadata in the same row order as the train and test arrays
+    train_pairs_info = df_pairs_info[df_pairs_info['split'] == 'train'].reset_index(drop=True)
+    test_pairs_info = df_pairs_info[df_pairs_info['split'] == 'test'].reset_index(drop=True)
+
+    return X_train_1, X_train_2, y_train, _, _, _, X_test_1, X_test_2, y_test, output_folder, logger, means, stds, train_pairs_info, test_pairs_info
 
 
 def focal_loss(gamma=2., alpha=0.25):
@@ -325,13 +351,51 @@ def train(X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_te
     logger.info(f"Training set - Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1_score:.4f}")
 
     return model
-    
+
+
+def save_predictions(model, X_train_1, X_train_2, X_test_1, X_test_2, train_pairs_info, test_pairs_info, output_folder, logger):
+    """
+    Saves the prediction of every lesion pair (train and test subjects) in a csv file, so that results can be analyzed per subject.
+
+    Output columns:
+        subject, split, timepoint_1, timepoint_2, group_1, group_2, label, pred_prob, pred_label, outcome (TP/FP/FN/TN),
+        followed by the raw (non-normalized) features of each lesion, suffixed with _1 and _2.
+    """
+    df_predictions = []
+    for X_1, X_2, pairs_info in [(X_train_1, X_train_2, train_pairs_info), (X_test_1, X_test_2, test_pairs_info)]:
+        if len(pairs_info) == 0:
+            continue
+        pairs_info = pairs_info.copy()
+        pairs_info['pred_prob'] = model.predict([X_1, X_2], verbose=0).flatten()
+        pairs_info['pred_label'] = (pairs_info['pred_prob'] > 0.5).astype(int)
+        df_predictions.append(pairs_info)
+    df_predictions = pd.concat(df_predictions, ignore_index=True)
+
+    # Outcome of each pair
+    df_predictions['outcome'] = 'TN'
+    df_predictions.loc[(df_predictions['label'] == 1) & (df_predictions['pred_label'] == 1), 'outcome'] = 'TP'
+    df_predictions.loc[(df_predictions['label'] == 0) & (df_predictions['pred_label'] == 1), 'outcome'] = 'FP'
+    df_predictions.loc[(df_predictions['label'] == 1) & (df_predictions['pred_label'] == 0), 'outcome'] = 'FN'
+
+    # Reorder columns: metadata and predictions first, then raw features
+    first_cols = ['subject', 'split', 'timepoint_1', 'timepoint_2', 'group_1', 'group_2', 'label', 'pred_prob', 'pred_label', 'outcome']
+    other_cols = [col for col in df_predictions.columns if col not in first_cols]
+    df_predictions = df_predictions[first_cols + other_cols]
+
+    predictions_path = os.path.join(output_folder, 'lesion_mapping_siamese_predictions.csv')
+    df_predictions.to_csv(predictions_path, index=False)
+    logger.info(f"Per-pair predictions saved at {predictions_path}")
+
+    return None
+
 
 if __name__ == "__main__":
     # Load the traing and testing data
-    X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_test_2, y_test, output_folder, logger, means, stds = load_data()
+    X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_test_2, y_test, output_folder, logger, means, stds, train_pairs_info, test_pairs_info = load_data()
     # Train the model and evaluate it
     model = train(X_train_1, X_train_2, y_train, X_val_1, X_val_2, y_val, X_test_1, X_test_2, y_test, output_folder, logger)
+    # Save the predictions of every lesion pair (per subject)
+    save_predictions(model, X_train_1, X_train_2, X_test_1, X_test_2, train_pairs_info, test_pairs_info, output_folder, logger)
     # Save the model
     model_path = os.path.join(output_folder, 'lesion_mapping_siamese_model.keras')
     model.save(model_path)
