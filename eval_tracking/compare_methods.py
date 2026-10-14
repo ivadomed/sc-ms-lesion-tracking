@@ -1,8 +1,8 @@
 """
 Compare lesion-tracking method performance with statistical tests.
 
-Loads per-subject (or per-fold) results from each method, aligns them on the
-common set of observations, then runs:
+Loads per-subject results from each method, aligns them on the common set of
+subjects, then runs:
   1. Friedman test — non-parametric K-method comparison for each metric.
   2. Post-hoc pairwise Wilcoxon signed-rank tests with Holm-Bonferroni correction.
 
@@ -12,13 +12,10 @@ Result formats handled automatically:
   ├─────────────────────────────┼──────────────────────────────────────────────────┤
   │ loocv_xgb / loocv_siamese   │ {subjects:[..], tp_scores:[..], ...}             │
   │ loocv_unreg                 │ {per_subject: {sub: {total_TP, total_FP, ...}}}  │
-  │ fivefold_cv_* (any method)  │ {folds: [{fold, test_subjects, total_TP, ...}]}  │
   │ run_evaluation (reg methods)│ {sub: {TP:[..], FP:[..], FN:[..]}}               │
   └─────────────────────────────┴──────────────────────────────────────────────────┘
 
-Note: LOOCV and reg-method files yield one observation per subject (recommended).
-      5-fold CV files yield one observation per fold (only 5 data points — weak
-      statistical power). Do not mix LOOCV and 5-fold CV files in the same run.
+Note: every file yields one observation per subject.
 
 Inputs (provide at least 2; all are optional):
     --unreg    : path to unreg CV results JSON
@@ -79,8 +76,7 @@ def load_results(path):
     """
     Load a results JSON and return a dict mapping observation key → {tp, fp, fn}.
 
-    Observation keys are subject IDs for LOOCV / reg-method files, or
-    'fold_N' strings for 5-fold CV files.
+    Observation keys are subject IDs.
     """
     with open(path, 'r') as f:
         data = json.load(f)
@@ -102,17 +98,6 @@ def load_results(path):
             obs[sub] = {'tp': int(sum(m["TP"]) if isinstance(m['TP'], list) else m['TP']),
                         'fp': int(sum(m["FP"]) if isinstance(m['FP'], list) else m['FP']),
                         'fn': int(sum(m["FN"]) if isinstance(m['FN'], list) else m['FN'])}
-
-    # ---- Format D/E: fivefold_cv_* -------------------------------------------
-    # {'folds': [{'fold': 1, 'total_TP': .., 'total_FP': .., 'total_FN': ..}, ...]}
-    elif 'folds' in data:
-        for fold in data['folds']:
-            key = f"fold_{fold['fold']}"
-            obs[key] = {
-                'tp': int(fold['total_TP']),
-                'fp': int(fold['total_FP']),
-                'fn': int(fold['total_FN']),
-            }
 
     # ---- Format C: run_evaluation overall_results.json (reg methods) ---------
     # {sub: {'TP': [...], 'FP': [...], 'FN': [...]}}
@@ -150,8 +135,7 @@ def build_metric_dataframes(method_results):
     logger.info(f"Common observations across all methods: {len(common_keys)}")
     if len(common_keys) == 0:
         raise ValueError(
-            "No common observations found. Make sure all result files use the "
-            "same evaluation strategy (all LOOCV or all 5-fold CV)."
+            "No common subjects found across the result files."
         )
 
     p_df  = pd.DataFrame(index=common_keys, dtype=float)
