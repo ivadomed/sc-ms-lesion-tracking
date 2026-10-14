@@ -12,6 +12,18 @@ This repo contains the code for evaluating 5 strategies to track SC MS lesions a
 TODO: if accepted add the citation here
 ```
 
+## Tracking strategies
+
+Some scripts refer to the strategies by their number (e.g. `strat5`).
+
+| # | Strategy | Script |
+|---|---|---|
+| 1 | Hungarian algorithm in the SC coordinate system (unregistered) | [track_lesion_unreg.py](./tracking/track_lesion_unreg.py) |
+| 2 | XGBoost using lesion features in the SC coordinate system | [track_lesion_xgb.py](./tracking/track_lesion_xgb.py) |
+| 3 | Siamese network using lesion features in the SC coordinate system | [track_lesion_siamese.py](./tracking/track_lesion_siamese.py) |
+| 4 | Hungarian matching of lesion centroids in the baseline scan reference space (registered + CoM) | [track_lesion_reg_com.py](./tracking/track_lesion_reg_com.py) |
+| 5 | Lesion overlap in the baseline scan reference space (registered + IoU) | [track_lesion_reg_iou.py](./tracking/track_lesion_reg_iou.py) |
+
 ## Installation
 
 1. Install [SCT v7.4](https://spinalcordtoolbox.com/user_section/installation.html)
