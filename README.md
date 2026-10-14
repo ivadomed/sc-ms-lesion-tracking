@@ -20,7 +20,7 @@ TODO: if accepted add the citation here
 
 ### Data preparation
 
-1. Build the MSD file from the include.yml file of selected subject for this study (in this case we used this [include.yml](./dataset_aggregation/include.yml) file)
+1. Build the MSD file from the include.yml file of selected subject for this study (in this case we used this [include.yml](./data_preparation/include.yml) file)
 
 ```console
 python build_msd_from_include_yml.py --include-yml /path/to/include.yml --dataset-path /path/to/dataset --output-path /path/to/output/folder
@@ -28,7 +28,7 @@ python build_msd_from_include_yml.py --include-yml /path/to/include.yml --datase
 
 2. Generate the GT lesion mappings for GT lesion segmentations
         
-    To do so, I labeled the lesion segmentations (so that each connected-component has a unique instance value) using  [generate_gt_labeled_segs_with_mapping.py](./dataset_exploration/generate_gt_labeled_segs_with_mapping.py). Then I manually fill the created lesion_mapping.json file witout considering how they were initially filed.
+    To do so, I labeled the lesion segmentations (so that each connected-component has a unique instance value) using  [generate_gt_labeled_segs_with_mapping.py](./data_preparation/generate_gt_labeled_segs_with_mapping.py). Then I manually fill the created lesion_mapping.json file witout considering how they were initially filed.
 
     NB: for the creation of the lesion mapping for predicted lesion segmentations, I just use the initialized file from strategy #5 (reg+IoU) and correct the mappings manually.
 
@@ -66,7 +66,7 @@ python track_lesion_siamese.py --dataset_csv /path/to/csv/dataset --output_folde
 
 ### Lesion tracking evaluation
 
-8. To evaluate each tracking methods we run [run_evaluation.py](./eval_tracking/run_evaluation.py)
+8. To evaluate each tracking methods we run [run_evaluation.py](./evaluation/run_evaluation.py)
 
 
 </details>

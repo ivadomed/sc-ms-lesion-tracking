@@ -33,9 +33,10 @@ import numpy as np
 from tqdm import tqdm
 from loguru import logger
 
+# Make tracking and evaluation modules importable
 file_path = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, file_path)
-sys.path.insert(0, os.path.abspath(os.path.join(file_path, "..", "eval_tracking")))
+sys.path.insert(0, os.path.abspath(os.path.join(file_path, "..", "tracking")))
+sys.path.insert(0, os.path.abspath(os.path.join(file_path, "..", "evaluation")))
 
 from track_lesion_unreg import map_lesions_unregistered
 from run_evaluation import compare_2_lesion_mappings
