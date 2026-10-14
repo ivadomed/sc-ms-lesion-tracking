@@ -24,6 +24,11 @@ Some scripts refer to the strategies by their number (e.g. `strat5`).
 | 4 | Hungarian matching of lesion centroids in the baseline scan reference space (registered + CoM) | [track_lesion_reg_com.py](./tracking/track_lesion_reg_com.py) |
 | 5 | Lesion overlap in the baseline scan reference space (registered + IoU) | [track_lesion_reg_iou.py](./tracking/track_lesion_reg_iou.py) |
 
+## Data availability
+
+The datasets used in this study are not publicly available. However, for reproducibility purposes, the binary segmentations, vertebral disc levels and registration warping fields are available in the [r20260610 release](https://github.com/ivadomed/sc-ms-lesion-tracking/releases/tag/r20260610).
+
+
 ## Installation
 
 1. Install [SCT v7.4](https://spinalcordtoolbox.com/user_section/installation.html)
@@ -56,7 +61,6 @@ pip install -r requirements.txt
 | [utils.py](./utils.py) | Shared functions (SC and lesion segmentation, centerline, vertebral levels, lesion labeling ...) |
 
 </details>
-
 
 ## Reproducing the study 
 
